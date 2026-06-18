@@ -1,0 +1,232 @@
+{
+  "meta": {
+    "title": "MithasHQ - The Operating System for Sweet Shops",
+    "description": "Manage inventory, production, customer ledgers, payments, and demand forecasting with MithasHQ. The complete ERP for sweet shops, dairy businesses, and namkeen manufacturers."
+  },
+  "nav": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "demo": "Try Demo",
+    "login": "Login",
+    "register": "Get Started"
+  },
+  "hero": {
+    "badge": "Trusted by 500+ Sweet Shops & Dairy Businesses",
+    "headline": "Run Your Entire Sweet Shop From One Dashboard",
+    "subheadline": "Manage inventory, production, customer ledgers, payments, and demand forecasting with MithasHQ. Built for Indian sweet shops, dairy businesses, and namkeen manufacturers.",
+    "ctaPrimary": "Start Free Trial",
+    "ctaSecondary": "Watch Demo",
+    "ctaDemo": "Try Demo"
+  },
+  "problem": {
+    "title": "Still Running Your Shop on WhatsApp & Notebooks?",
+    "subtitle": "Most sweet shops still rely on outdated tools. Here's what goes wrong:",
+    "cards": {
+      "stockouts": {
+        "title": "Stockouts & Wastage",
+        "description": "No idea what you have in stock. Milk spoils. Sweets expire. Money goes down the drain."
+      },
+      "payments": {
+        "title": "Missed Payments",
+        "description": "Customers owe money but you can't track it. Bad debts pile up. Cash flow suffers."
+      },
+      "production": {
+        "title": "Production Blindness",
+        "description": "Making too much or too little every day. No correlation between demand and production."
+      },
+      "intelligence": {
+        "title": "Zero Business Intelligence",
+        "description": "No clue which product is most profitable. Decisions are based on gut feeling, not data."
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "How MithasHQ Works",
+    "subtitle": "Three simple steps to transform your shop",
+    "steps": {
+      "1": {
+        "title": "Manage Inventory",
+        "description": "Log stock-in and stock-out in seconds. Get low-stock alerts before you run out. Track expiry dates automatically."
+      },
+      "2": {
+        "title": "Track Production",
+        "description": "Plan your daily batches. Track actual vs planned production. Reduce waste and improve efficiency."
+      },
+      "3": {
+        "title": "Grow Profitability",
+        "description": "See who owes you, what's selling, and what to produce tomorrow. Make data-driven decisions."
+      }
+    }
+  },
+  "features": {
+    "title": "Everything You Need to Run Your Shop",
+    "subtitle": "One platform. All your operations. Zero complexity.",
+    "inventory": {
+      "title": "Inventory Management",
+      "description": "Real-time stock tracking with expiry alerts and reorder notifications."
+    },
+    "production": {
+      "title": "Production Tracking",
+      "description": "Plan batches, track inputs & outputs, and calculate production costs."
+    },
+    "ledger": {
+      "title": "Customer Ledger",
+      "description": "B2B wholesale tracking with outstanding balance and credit limit monitoring."
+    },
+    "payments": {
+      "title": "Payment Tracking",
+      "description": "Cash, UPI, Bank Transfer, Cheque — all recorded in one place."
+    },
+    "reports": {
+      "title": "Outstanding Reports",
+      "description": "One-click reports on who owes what. Filter by customer, shop, or date range."
+    },
+    "forecasting": {
+      "title": "Demand Forecasting",
+      "description": "AI-powered predictions for festivals, weekdays, and seasonal trends."
+    },
+    "ai": {
+      "title": "AI Business Assistant",
+      "description": "Ask questions. Get answers. What should I produce tomorrow? Who owes the most?"
+    },
+    "multishop": {
+      "title": "Multi-Shop Management",
+      "description": "One dashboard for all your locations. Compare performance across shops."
+    }
+  },
+  "trust": {
+    "title": "Your Data is Safe With Us",
+    "security": {
+      "title": "Data Security",
+      "description": "256-bit encryption, SSL everywhere. Your data is encrypted in transit and at rest."
+    },
+    "access": {
+      "title": "Role-Based Access",
+      "description": "Owner, Manager, Accountant, Staff — each sees only what they need."
+    },
+    "backup": {
+      "title": "Cloud Backups",
+      "description": "Automatic daily backups. Never lose your data, even if your phone breaks."
+    },
+    "isolation": {
+      "title": "Multi-Tenant Isolation",
+      "description": "Your data is completely separate from every other shop. No data leakage, ever."
+    }
+  },
+  "pricing": {
+    "title": "Simple, Transparent Pricing",
+    "subtitle": "Start free. Scale when you're ready.",
+    "free": {
+      "name": "Starter",
+      "price": "Free",
+      "period": "forever",
+      "description": "Perfect for small shops just getting started",
+      "features": [
+        "1 Shop",
+        "2 Users",
+        "100 Products",
+        "Inventory Management",
+        "Customer Ledger",
+        "Payment Tracking",
+        "Basic Analytics",
+        "Email Support"
+      ],
+      "cta": "Get Started Free"
+    },
+    "growth": {
+      "name": "Growth",
+      "price": "₹999",
+      "period": "per month",
+      "description": "For growing businesses with multiple locations",
+      "features": [
+        "3 Shops",
+        "10 Users",
+        "Unlimited Products",
+        "Production Tracking",
+        "Demand Forecasting",
+        "AI Business Assistant",
+        "Advanced Analytics",
+        "Priority Support"
+      ],
+      "cta": "Start Free Trial",
+      "badge": "Most Popular"
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "Custom",
+      "period": "",
+      "description": "For large chains and franchise operations",
+      "features": [
+        "Unlimited Shops",
+        "Unlimited Users",
+        "Custom Integrations",
+        "Dedicated Account Manager",
+        "SLA Guarantee",
+        "On-Premise Option",
+        "API Access",
+        "24/7 Phone Support"
+      ],
+      "cta": "Contact Sales"
+    },
+    "note": "All plans include a 14-day free trial. No credit card required."
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "items": {
+      "data": {
+        "question": "Is my data safe?",
+        "answer": "Yes. Your data is encrypted with 256-bit AES encryption, stored in isolated tenant databases, and backed up daily. We never share or sell your data."
+      },
+      "mobile": {
+        "question": "Can I use it on mobile?",
+        "answer": "Absolutely. MithasHQ is a fully responsive Progressive Web App (PWA). Use it on your phone, tablet, or desktop — it works beautifully everywhere."
+      },
+      "multishop": {
+        "question": "What if I have multiple shops?",
+        "answer": "The Growth plan supports up to 3 shops. The Enterprise plan supports unlimited shops. You can switch between shops instantly from one dashboard."
+      },
+      "ai": {
+        "question": "How does the AI assistant work?",
+        "answer": "Our AI reads your business data (inventory, sales, payments) and answers questions like 'What should I produce tomorrow?' or 'Which customer owes the most?' It never shares your data externally."
+      },
+      "cancel": {
+        "question": "Can I cancel anytime?",
+        "answer": "Yes. No lock-in. No cancellation fees. Export your data anytime before leaving."
+      },
+      "trial": {
+        "question": "Is there a free trial?",
+        "answer": "Yes, every plan includes a 14-day full-feature trial. No credit card required. You can also try our demo mode with synthetic data instantly."
+      }
+    }
+  },
+  "finalCta": {
+    "title": "Start Managing Your Sweet Shop Smarter",
+    "subtitle": "Join 500+ sweet shops already using MithasHQ",
+    "cta": "Start Free Trial — 14 Days Free",
+    "note": "No credit card required. Try demo mode instantly."
+  },
+  "footer": {
+    "tagline": "The Operating System for Sweet Shops",
+    "links": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "demo": "Try Demo",
+      "contact": "Contact"
+    },
+    "contact": {
+      "email": "ronit20work@gmail.com",
+      "linkedin": "linkedin.com/in/ronit-chawla-0a129b24b"
+    },
+    "legal": {
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
+    },
+    "copyright": "© 2026 MithasHQ. All rights reserved."
+  },
+  "demo": {
+    "title": "Try Demo Mode",
+    "description": "Experience MithasHQ with realistic demo data. No signup required.",
+    "cta": "Launch Demo",
+    "features": "Access all features with pre-loaded data for a sweet shop."
+  }
+}
