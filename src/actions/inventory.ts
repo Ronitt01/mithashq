@@ -90,7 +90,7 @@ export async function getLowStock(tenantId: string) {
     where: { tenantId },
     include: { product: true },
   });
-  return inventory.filter((item) => {
+  return inventory.filter((item: any) => {
     const reorder = item.product.reorderLevel?.toNumber() || 0;
     return item.quantity.toNumber() <= reorder;
   });
