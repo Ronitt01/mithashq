@@ -1,10 +1,9 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
 }
 
 model Account {
@@ -175,6 +174,7 @@ model Product {
   batchItems    ProductionBatchItem[]
   deliveryItems DeliveryItem[]
   forecastItems ForecastItem[]
+  productionOutputs ProductionOutput[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
