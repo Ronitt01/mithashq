@@ -49,7 +49,7 @@ async function getDashboardData(tenantId: string) {
     }),
   ]);
 
-  const lowStock = lowStockItems.filter((item) => {
+  const lowStock = lowStockItems.filter((item: any) => {
     const reorderLevel = item.product.reorderLevel?.toNumber() || 0;
     return item.quantity.toNumber() <= reorderLevel;
   });

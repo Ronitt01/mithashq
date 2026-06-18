@@ -38,20 +38,20 @@ export default async function AIAssistantPage({ params }: { params: Promise<{ lo
   ]);
 
   const outstanding = payments
-    .filter((p) => p.status === "PENDING" || p.status === "PARTIAL")
-    .reduce((sum, p) => sum + (p.amount?.toNumber() || 0), 0);
+    .filter((p: any) => p.status === "PENDING" || p.status === "PARTIAL")
+    .reduce((sum: number, p: any) => sum + (p.amount?.toNumber?.() || 0), 0);
 
-  const lowStock = inventory.filter((item) => {
+  const lowStock = inventory.filter((item: any) => {
     const reorder = item.product.reorderLevel?.toNumber() || 0;
     return item.quantity.toNumber() <= reorder;
   });
 
   const context = `
 Business: ${products} active products, ${inventory.length} inventory items, ${customers.length} customers.
-Low stock alerts: ${lowStock.map((i) => `${i.product.name} (${i.quantity.toNumber()} ${i.product.unit})`).join(", ") || "None"}.
+Low stock alerts: ${lowStock.map((i: any) => `${i.product.name} (${i.quantity.toNumber()} ${i.product.unit})`).join(", ") || "None"}.
 Outstanding payments: ₹${outstanding.toLocaleString()}.
 Recent deliveries: ${deliveries.length} in the last period.
-Top customers by recent deliveries: ${customers.slice(0, 3).map((c) => c.name).join(", ") || "N/A"}.
+Top customers by recent deliveries: ${customers.slice(0, 3).map((c: any) => c.name).join(", ") || "N/A"}.
 `;
 
   return (
