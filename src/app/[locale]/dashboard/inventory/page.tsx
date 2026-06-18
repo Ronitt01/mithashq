@@ -1,13 +1,40 @@
-export default function InventoryPage() {
+import { auth } from "@/lib/auth";
+import { prisma } from "@/db/prisma";
+import { redirect } from "next/navigation";
+import { InventoryClient } from "@/components/dashboard/InventoryClient";
+
+export default async function InventoryPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const session = await auth();
+  if (!session?.user?.tenantId) {
+    redirect(`/${locale}/login`);
+  }
+
+  const [inventory, products, logs] = await Promise.all([
+    prisma.inventory.findMany({
+      where: { tenantId: session.user.tenantId },
+      include: { product: { include: { category: true } }, shop: true },
+      orderBy: { updatedAt: "desc" },
+    }),
+    prisma.product.findMany({
+      where: { tenantId: session.user.tenantId, isActive: true },
+      orderBy: { name: "asc" },
+    }),
+    prisma.stockLog.findMany({
+      where: { tenantId: session.user.tenantId },
+      include: { product: true, shop: true },
+      orderBy: { createdAt: "desc" },
+      take: 20,
+    }),
+  ]);
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-[#1A1A2E]">Inventory</h1>
-        <p className="text-gray-600">Track stock levels and movements</p>
-      </div>
-      <div className="bg-white rounded-xl border border-gray-100 p-8 text-center">
-        <p className="text-gray-500">Inventory management module — coming in full build</p>
-      </div>
-    </div>
+    <InventoryClient
+      inventory={inventory}
+      products={products}
+      logs={logs}
+      tenantId={session.user.tenantId}
+      locale={locale}
+    />
   );
 }

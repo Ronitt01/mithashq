@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { Mail, Linkedin } from "lucide-react";
+import { Mail, ExternalLink } from "lucide-react";
 
 export function Footer({ locale }: { locale: string }) {
   const t = useTranslations("footer");
@@ -54,7 +54,7 @@ export function Footer({ locale }: { locale: string }) {
                 </a>
               </li>
               <li className="flex items-center gap-2 text-gray-400 text-sm">
-                <Linkedin className="w-4 h-4" />
+                <ExternalLink className="w-4 h-4" />
                 <a href={`https://${t("contact.linkedin")}`} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                   LinkedIn
                 </a>

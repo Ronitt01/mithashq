@@ -1,5 +1,5 @@
 import createMiddleware from "next-intl/middleware";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { locales, defaultLocale } from "@/i18n/config";
 
 const intlMiddleware = createMiddleware({
@@ -8,7 +8,7 @@ const intlMiddleware = createMiddleware({
   localePrefix: "as-needed",
 });
 
-export default async function middleware(request: Request) {
+export default async function middleware(request: NextRequest) {
   const pathname = new URL(request.url).pathname;
 
   // Skip API routes and auth routes

@@ -3,7 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
-import { prisma } from "./db/prisma";
+import { prisma } from "@/db/prisma";
 
 const credentialsSchema = z.object({
   email: z.string().email(),
@@ -84,9 +84,7 @@ declare module "next-auth" {
     role: string;
     tenantId: string | null;
   }
-}
 
-declare module "next-auth/jwt" {
   interface JWT {
     id: string;
     role: string;

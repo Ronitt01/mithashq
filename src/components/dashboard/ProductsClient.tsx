@@ -5,22 +5,6 @@ import { createProduct, updateProduct, deleteProduct, createCategory } from "@/a
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Package, Plus, Pencil, Trash2, X, Search, Tag } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-
-const productFormSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  sku: z.string().optional(),
-  categoryId: z.string().optional(),
-  costPrice: z.coerce.number().positive("Cost price must be positive"),
-  sellingPrice: z.coerce.number().positive("Selling price must be positive"),
-  shelfLifeDays: z.coerce.number().int().optional(),
-  unit: z.enum(["KG", "LITRE", "PIECE", "GRAM", "ML", "UNIT", "BOX", "PACKET"]),
-  reorderLevel: z.coerce.number().optional(),
-});
-
-type ProductForm = z.infer<typeof productFormSchema>;
 
 interface ProductsClientProps {
   products: Array<{
@@ -48,18 +32,18 @@ export function ProductsClient({ products, categories, tenantId, locale }: Produ
   const [localCategories, setLocalCategories] = useState(categories);
   const [newCategory, setNewCategory] = useState("");
   const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    formState: { errors, isSubmitting },
-  } = useForm<ProductForm>({
-    resolver: zodResolver(productFormSchema),
-    defaultValues: {
-      unit: "KG",
-    },
+  const [formData, setFormData] = useState({
+    name: "",
+    sku: "",
+    categoryId: "",
+    costPrice: "",
+    sellingPrice: "",
+    shelfLifeDays: "",
+    unit: "KG",
+    reorderLevel: "",
   });
 
   const filtered = localProducts.filter((p) =>
@@ -67,7 +51,31 @@ export function ProductsClient({ products, categories, tenantId, locale }: Produ
     (p.sku && p.sku.toLowerCase().includes(search.toLowerCase()))
   );
 
-  async function onSubmit(data: ProductForm) {
+  function validateForm() {
+    const errors: Record<string, string> = {};
+    if (!formData.name.trim()) errors.name = "Name is required";
+    if (!formData.costPrice || Number(formData.costPrice) <= 0) errors.costPrice = "Cost price must be positive";
+    if (!formData.sellingPrice || Number(formData.sellingPrice) <= 0) errors.sellingPrice = "Selling price must be positive";
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!validateForm()) return;
+    setLoading(true);
+
+    const data = {
+      name: formData.name.trim(),
+      sku: formData.sku || undefined,
+      categoryId: formData.categoryId || undefined,
+      costPrice: Number(formData.costPrice),
+      sellingPrice: Number(formData.sellingPrice),
+      shelfLifeDays: formData.shelfLifeDays ? Number(formData.shelfLifeDays) : undefined,
+      unit: formData.unit as any,
+      reorderLevel: formData.reorderLevel ? Number(formData.reorderLevel) : undefined,
+    };
+
     if (editingId) {
       await updateProduct(editingId, tenantId, data);
       setLocalProducts((prev) =>
@@ -76,11 +84,13 @@ export function ProductsClient({ products, categories, tenantId, locale }: Produ
             ? {
                 ...p,
                 ...data,
+                sku: data.sku || null,
                 costPrice: data.costPrice,
                 sellingPrice: data.sellingPrice,
-                reorderLevel: data.reorderLevel,
+                reorderLevel: data.reorderLevel ?? null,
+                shelfLifeDays: data.shelfLifeDays ?? null,
                 category: localCategories.find((c) => c.id === data.categoryId) || p.category,
-              }
+              } as any
             : p
         )
       );
@@ -93,12 +103,20 @@ export function ProductsClient({ products, categories, tenantId, locale }: Produ
           {
             ...newProduct,
             category: localCategories.find((c) => c.id === data.categoryId) || null,
-          },
+          } as any,
         ]);
       }
     }
-    reset();
+    resetForm();
     setShowForm(false);
+    setLoading(false);
+  }
+
+  function resetForm() {
+    setFormData({
+      name: "", sku: "", categoryId: "", costPrice: "", sellingPrice: "", shelfLifeDays: "", unit: "KG", reorderLevel: "",
+    });
+    setFormErrors({});
   }
 
   async function handleDelete(id: string) {
@@ -109,14 +127,16 @@ export function ProductsClient({ products, categories, tenantId, locale }: Produ
 
   function handleEdit(product: (typeof localProducts)[0]) {
     setEditingId(product.id);
-    setValue("name", product.name);
-    setValue("sku", product.sku || "");
-    setValue("categoryId", product.category?.id || "");
-    setValue("costPrice", product.costPrice?.toNumber() || 0);
-    setValue("sellingPrice", product.sellingPrice?.toNumber() || 0);
-    setValue("shelfLifeDays", product.shelfLifeDays || undefined);
-    setValue("unit", product.unit as any);
-    setValue("reorderLevel", product.reorderLevel?.toNumber() || 0);
+    setFormData({
+      name: product.name,
+      sku: product.sku || "",
+      categoryId: product.category?.id || "",
+      costPrice: product.costPrice?.toNumber?.() || product.costPrice || "",
+      sellingPrice: product.sellingPrice?.toNumber?.() || product.sellingPrice || "",
+      shelfLifeDays: product.shelfLifeDays?.toString() || "",
+      unit: product.unit,
+      reorderLevel: product.reorderLevel?.toNumber?.() || product.reorderLevel || "",
+    });
     setShowForm(true);
   }
 
@@ -151,7 +171,7 @@ export function ProductsClient({ products, categories, tenantId, locale }: Produ
           <Button
             onClick={() => {
               setEditingId(null);
-              reset();
+              resetForm();
               setShowForm(!showForm);
             }}
           >
@@ -161,7 +181,6 @@ export function ProductsClient({ products, categories, tenantId, locale }: Produ
         </div>
       </div>
 
-      {/* Add/Edit Form */}
       {showForm && (
         <Card>
           <CardContent className="p-6">
@@ -173,20 +192,32 @@ export function ProductsClient({ products, categories, tenantId, locale }: Produ
                 <X className="w-5 h-5 text-gray-400" />
               </button>
             </div>
-            <form onSubmit={handleSubmit(onSubmit)} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <form onSubmit={handleSubmit} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
-                <input {...register("name")} className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#E85D04] focus:ring-2 focus:ring-[#E85D04]/20 outline-none" />
-                {errors.name && <p className="text-xs text-red-600 mt-1">{errors.name.message}</p>}
+                <input
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#E85D04] focus:ring-2 focus:ring-[#E85D04]/20 outline-none"
+                />
+                {formErrors.name && <p className="text-xs text-red-600 mt-1">{formErrors.name}</p>}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">SKU</label>
-                <input {...register("sku")} className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#E85D04] focus:ring-2 focus:ring-[#E85D04]/20 outline-none" />
+                <input
+                  value={formData.sku}
+                  onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#E85D04] focus:ring-2 focus:ring-[#E85D04]/20 outline-none"
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                 <div className="flex gap-2">
-                  <select {...register("categoryId")} className="flex-1 px-3 py-2 rounded-lg border border-gray-200 focus:border-[#E85D04] focus:ring-2 focus:ring-[#E85D04]/20 outline-none">
+                  <select
+                    value={formData.categoryId}
+                    onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
+                    className="flex-1 px-3 py-2 rounded-lg border border-gray-200 focus:border-[#E85D04] focus:ring-2 focus:ring-[#E85D04]/20 outline-none"
+                  >
                     <option value="">Select category</option>
                     {localCategories.map((c) => (
                       <option key={c.id} value={c.id}>{c.name}</option>
@@ -218,17 +249,33 @@ export function ProductsClient({ products, categories, tenantId, locale }: Produ
               )}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Cost Price (₹) *</label>
-                <input type="number" step="0.01" {...register("costPrice")} className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#E85D04] focus:ring-2 focus:ring-[#E85D04]/20 outline-none" />
-                {errors.costPrice && <p className="text-xs text-red-600 mt-1">{errors.costPrice.message}</p>}
+                <input
+                  type="number"
+                  step="0.01"
+                  value={formData.costPrice}
+                  onChange={(e) => setFormData({ ...formData, costPrice: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#E85D04] focus:ring-2 focus:ring-[#E85D04]/20 outline-none"
+                />
+                {formErrors.costPrice && <p className="text-xs text-red-600 mt-1">{formErrors.costPrice}</p>}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Selling Price (₹) *</label>
-                <input type="number" step="0.01" {...register("sellingPrice")} className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#E85D04] focus:ring-2 focus:ring-[#E85D04]/20 outline-none" />
-                {errors.sellingPrice && <p className="text-xs text-red-600 mt-1">{errors.sellingPrice.message}</p>}
+                <input
+                  type="number"
+                  step="0.01"
+                  value={formData.sellingPrice}
+                  onChange={(e) => setFormData({ ...formData, sellingPrice: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#E85D04] focus:ring-2 focus:ring-[#E85D04]/20 outline-none"
+                />
+                {formErrors.sellingPrice && <p className="text-xs text-red-600 mt-1">{formErrors.sellingPrice}</p>}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Unit</label>
-                <select {...register("unit")} className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#E85D04] focus:ring-2 focus:ring-[#E85D04]/20 outline-none">
+                <select
+                  value={formData.unit}
+                  onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#E85D04] focus:ring-2 focus:ring-[#E85D04]/20 outline-none"
+                >
                   {["KG", "LITRE", "PIECE", "GRAM", "ML", "UNIT", "BOX", "PACKET"].map((u) => (
                     <option key={u} value={u}>{u}</option>
                   ))}
@@ -236,15 +283,26 @@ export function ProductsClient({ products, categories, tenantId, locale }: Produ
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Shelf Life (Days)</label>
-                <input type="number" {...register("shelfLifeDays")} className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#E85D04] focus:ring-2 focus:ring-[#E85D04]/20 outline-none" />
+                <input
+                  type="number"
+                  value={formData.shelfLifeDays}
+                  onChange={(e) => setFormData({ ...formData, shelfLifeDays: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#E85D04] focus:ring-2 focus:ring-[#E85D04]/20 outline-none"
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Reorder Level</label>
-                <input type="number" step="0.01" {...register("reorderLevel")} className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#E85D04] focus:ring-2 focus:ring-[#E85D04]/20 outline-none" />
+                <input
+                  type="number"
+                  step="0.01"
+                  value={formData.reorderLevel}
+                  onChange={(e) => setFormData({ ...formData, reorderLevel: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#E85D04] focus:ring-2 focus:ring-[#E85D04]/20 outline-none"
+                />
               </div>
               <div className="sm:col-span-2 lg:col-span-3">
-                <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
-                  {isSubmitting ? "Saving..." : editingId ? "Update Product" : "Add Product"}
+                <Button type="submit" disabled={loading}>
+                  {loading ? "Saving..." : editingId ? "Update Product" : "Add Product"}
                 </Button>
               </div>
             </form>
@@ -252,7 +310,6 @@ export function ProductsClient({ products, categories, tenantId, locale }: Produ
         </Card>
       )}
 
-      {/* Products Table */}
       <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
