@@ -5,27 +5,24 @@ import bcrypt from "bcryptjs";
 
 const DEMO_PASSWORD = "demo123456";
 const DEMO_EMAIL = "demo@mithashq.com";
+const DEMO_SLUG = "sharma-sweets-demo";
 
 export async function createDemoData() {
   try {
-    // Delete existing demo user if exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email: DEMO_EMAIL },
-      include: { tenant: true },
-    });
-
-    if (existingUser?.tenant) {
-      await prisma.tenant.delete({
-        where: { id: existingUser.tenant.id },
-      });
-    }
+    // Clean up any previous demo data so "Launch Demo" is safely re-runnable.
+    // User.tenantId is ON DELETE SET NULL, so deleting the tenant alone leaves
+    // the demo user behind and the unique-email constraint then fails. Delete
+    // the user explicitly (cascades its sessions/accounts) and the demo tenant
+    // (cascades shops, products, inventory, customers, deliveries, etc.).
+    await prisma.user.deleteMany({ where: { email: DEMO_EMAIL } });
+    await prisma.tenant.deleteMany({ where: { slug: DEMO_SLUG } });
 
     const hashedPassword = await bcrypt.hash(DEMO_PASSWORD, 12);
 
     const tenant = await prisma.tenant.create({
       data: {
         name: "Sharma Sweets & Dairy",
-        slug: "sharma-sweets-demo",
+        slug: DEMO_SLUG,
         plan: "GROWTH",
         isDemo: true,
       },
