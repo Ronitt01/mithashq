@@ -52,6 +52,7 @@ export async function signUp(data: z.infer<typeof signUpSchema>) {
     return { success: true, userId: user.id };
   } catch (error) {
     console.error("Sign up error:", error);
-    return { success: false, error: "Failed to create account" };
+    const message = error instanceof Error ? error.message : String(error);
+    return { success: false, error: `Failed to create account: ${message}` };
   }
 }

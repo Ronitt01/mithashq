@@ -312,6 +312,8 @@ export async function createDemoData() {
     };
   } catch (error) {
     console.error("Demo creation error:", error);
-    return { success: false, error: "Failed to create demo data" };
+    const message = error instanceof Error ? error.message : String(error);
+    // Surface the real cause (e.g. missing table / bad DATABASE_URL) instead of a generic string.
+    return { success: false, error: `Failed to create demo data: ${message}` };
   }
 }
