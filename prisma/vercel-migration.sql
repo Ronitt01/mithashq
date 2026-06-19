@@ -1,3 +1,21 @@
+-- ============================================================================
+-- RESET (makes this script safely re-runnable).
+-- WARNING: DESTRUCTIVE — this drops the tables below and ALL their data.
+-- It is fine for first-time / demo setup. Do NOT run on a database whose
+-- data you want to keep.
+-- ============================================================================
+DROP TABLE IF EXISTS
+  "Notification","AIChat","ForecastItem","Forecast","Festival","Payment",
+  "DeliveryItem","Delivery","Customer","ProductionOutput","ProductionBatchItem",
+  "ProductionBatch","StockLog","Inventory","Product","Category","Shop","Tenant",
+  "User","VerificationToken","Session","Account"
+CASCADE;
+
+DROP TYPE IF EXISTS
+  "NotificationType","PaymentStatus","PaymentMethod","DeliveryStatus","CustomerType",
+  "ProductionStatus","StockMovementType","Unit","Plan","UserRole"
+CASCADE;
+
 -- CreateSchema
 CREATE SCHEMA IF NOT EXISTS "public";
 
@@ -67,7 +85,8 @@ CREATE TABLE "VerificationToken" (
 );
 
 -- CreateTable
-CREATE TABLE "User" (
+CREATE TABLE "User" ( 
+    
     "id" TEXT NOT NULL,
     "name" TEXT,
     "email" TEXT NOT NULL,
