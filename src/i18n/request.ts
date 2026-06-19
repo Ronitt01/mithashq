@@ -1,9 +1,15 @@
-import { locales, defaultLocale } from "@/i18n/config";
+import { locales, defaultLocale, type Locale } from "@/i18n/config";
 import { getRequestConfig } from "next-intl/server";
-import { notFound } from "next/navigation";
 
-export default getRequestConfig(async ({ locale }) => {
-  if (!locales.includes(locale as any)) notFound();
-  const messages = (await import(`../messages/${locale}.json`)).default;
-  return { messages, locale: locale as string };
+export default getRequestConfig(async ({ requestLocale }) => {
+  // `requestLocale` resolves to the `[locale]` segment matched by middleware.
+  // It can be undefined/invalid (catch-all routes), so fall back to the default.
+  const requested = await requestLocale;
+  const locale = locales.includes(requested as Locale)
+    ? (requested as Locale)
+    : defaultLocale;
+
+  const messages = (await import(`../../messages/${locale}.json`)).default;
+
+  return { locale, messages };
 });

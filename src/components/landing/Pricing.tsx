@@ -20,7 +20,7 @@ export function Pricing({ locale }: { locale: string }) {
         </div>
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {plans.map((plan, i) => {
-            const features = t(`plans.${plan}.features` as any) as unknown as string[];
+            const features = t.raw(`${plan}.features` as any) as string[];
             const isPopular = plan === "growth";
             return (
               <motion.div
@@ -39,25 +39,25 @@ export function Pricing({ locale }: { locale: string }) {
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                     <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-[#FAA307] text-[#1A1A2E] text-xs font-bold">
                       <Zap className="w-3 h-3" />
-                      {t("plans.growth.badge")}
+                      {t("growth.badge")}
                     </div>
                   </div>
                 )}
                 <h3 className={`text-lg font-semibold mb-2 ${isPopular ? "text-white" : "text-[#1A1A2E]"}`}>
-                  {t(`plans.${plan}.name` as any)}
+                  {t(`${plan}.name` as any)}
                 </h3>
                 <div className="mb-4">
                   <span className={`text-4xl font-bold ${isPopular ? "text-white" : "text-[#1A1A2E]"}`}>
-                    {t(`plans.${plan}.price` as any)}
+                    {t(`${plan}.price` as any)}
                   </span>
-                  {t(`plans.${plan}.period` as any) && (
+                  {t(`${plan}.period` as any) && (
                     <span className={`text-sm ml-1 ${isPopular ? "text-gray-300" : "text-gray-500"}`}>
-                      / {t(`plans.${plan}.period` as any)}
+                      / {t(`${plan}.period` as any)}
                     </span>
                   )}
                 </div>
                 <p className={`text-sm mb-6 ${isPopular ? "text-gray-300" : "text-gray-600"}`}>
-                  {t(`plans.${plan}.description` as any)}
+                  {t(`${plan}.description` as any)}
                 </p>
                 <ul className="space-y-3 mb-8">
                   {Array.isArray(features) && features.map((feature, fi) => (
@@ -75,7 +75,7 @@ export function Pricing({ locale }: { locale: string }) {
                       : "bg-gray-100 text-[#1A1A2E] hover:bg-gray-200"
                   }`}
                 >
-                  {t(`plans.${plan}.cta` as any)}
+                  {t(`${plan}.cta` as any)}
                 </a>
               </motion.div>
             );
