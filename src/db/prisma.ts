@@ -8,12 +8,20 @@ function createPrismaClient(): PrismaClient {
   if (!databaseUrl) {
     throw new Error(
       "DATABASE_URL environment variable is missing. " +
-      "Please set it in Vercel Settings → Environment Variables. " +
-      "Value should be: postgresql://postgres:****@db.sqmxagueibuyndiiccdu.supabase.co:5432/postgres"
+      "Set it in Vercel → Settings → Environment Variables to your Supabase " +
+      "connection string (use the connection pooler / port 6543 for serverless)."
     );
   }
 
-  const pool = new Pool({ connectionString: databaseUrl });
+  // Supabase requires SSL. Enable it for any non-local connection so we don't
+  // depend on `sslmode` being present in the URL (and accept Supabase's cert).
+  const isLocal =
+    databaseUrl.includes("localhost") || databaseUrl.includes("127.0.0.1");
+
+  const pool = new Pool({
+    connectionString: databaseUrl,
+    ssl: isLocal ? undefined : { rejectUnauthorized: false },
+  });
   const adapter = new PrismaPg(pool);
   return new PrismaClient({ adapter });
 }
