@@ -30,8 +30,8 @@ export function InventoryClient({ inventory, products, logs, tenantId, locale }:
   );
 
   const lowStock = filtered.filter((item) => {
-    const reorder = item.product.reorderLevel?.toNumber?.() || 0;
-    return item.quantity.toNumber() <= reorder;
+    const reorder = Number(item.product.reorderLevel) || 0;
+    return Number(item.quantity) <= reorder;
   });
 
   async function handleSubmit(e: React.FormEvent) {
@@ -166,8 +166,8 @@ export function InventoryClient({ inventory, products, logs, tenantId, locale }:
             </thead>
             <tbody>
               {filtered.map((item) => {
-                const qty = item.quantity.toNumber();
-                const reorder = item.product.reorderLevel?.toNumber?.() || 0;
+                const qty = Number(item.quantity);
+                const reorder = Number(item.product.reorderLevel) || 0;
                 const isLow = qty <= reorder;
                 return (
                   <tr key={item.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
@@ -242,7 +242,7 @@ export function InventoryClient({ inventory, products, logs, tenantId, locale }:
                       {log.type.replace("_", " ")}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-right text-sm font-medium">{log.quantity.toNumber()}</td>
+                  <td className="px-4 py-3 text-right text-sm font-medium">{Number(log.quantity)}</td>
                   <td className="px-4 py-3 text-sm text-gray-600">{log.reason || "—"}</td>
                 </tr>
               ))}

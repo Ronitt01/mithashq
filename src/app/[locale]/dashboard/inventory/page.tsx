@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/db/prisma";
 import { redirect } from "next/navigation";
 import { InventoryClient } from "@/components/dashboard/InventoryClient";
+import { toPlain } from "@/lib/serialize";
 
 export default async function InventoryPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -30,9 +31,9 @@ export default async function InventoryPage({ params }: { params: Promise<{ loca
 
   return (
     <InventoryClient
-      inventory={inventory}
-      products={products}
-      logs={logs}
+      inventory={toPlain(inventory)}
+      products={toPlain(products)}
+      logs={toPlain(logs)}
       tenantId={session.user.tenantId}
       locale={locale}
     />

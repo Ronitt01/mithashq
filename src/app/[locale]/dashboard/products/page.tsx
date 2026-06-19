@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/db/prisma";
 import { redirect } from "next/navigation";
 import { ProductsClient } from "@/components/dashboard/ProductsClient";
+import { toPlain } from "@/lib/serialize";
 
 export default async function ProductsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -24,7 +25,7 @@ export default async function ProductsPage({ params }: { params: Promise<{ local
 
   return (
     <ProductsClient
-      products={products}
+      products={toPlain(products)}
       categories={categories}
       tenantId={session.user.tenantId}
       locale={locale}
